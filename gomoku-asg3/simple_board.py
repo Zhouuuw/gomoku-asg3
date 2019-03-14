@@ -10,6 +10,7 @@ The board uses a 1-dimensional representation with padding
 """
 
 import numpy as np
+import random
 from board_util import GoBoardUtil, BLACK, WHITE, EMPTY, BORDER, \
                        PASS, is_black_white, coord_to_point, where1d, \
                        MAXSIZE, NULLPOINT
@@ -344,7 +345,7 @@ class SimpleGoBoard(object):
         assert self.get_color(point) == opponent_color
         self.board[point] = EMPTY
         self.current_player = opponent_color
-        
+
     def play_move_gomoku(self, point, color):
         """
             Play a move of color on point, for the game of gomoku
@@ -427,3 +428,27 @@ class SimpleGoBoard(object):
                 return True, BLACK
 
         return False, None
+
+    def simulate(self):
+        """
+        1. check if any player win first
+        2. if no player wins, copy current board into b
+        and play all legal moves in a random order
+        until there is a win or a draw.
+        3. Finally return simulate result for sampling
+        """
+        result,winner = self.check_game_end_gomoku()
+        if result == True:
+            return winner
+
+        all_moves = self.get_empty_points()
+        random.shuffle(all_moves)
+        b = self.copy()
+        for i in range(len(all_moves)):
+            b.play_move_gomoku(all_moves[i])
+            result,winner = b.check_game_end_gomoku()
+            if result == True:
+                return winner
+        return 0
+
+            
