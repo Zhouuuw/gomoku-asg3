@@ -76,6 +76,7 @@ class SimpleGoBoard(object):
         The board is stored as a one-dimensional array
         See GoBoardUtil.coord_to_point for explanations of the array encoding
         """
+        self.move_history = []
         self.size = size
         self.NS = size + 1
         self.WE = 1
@@ -337,6 +338,13 @@ class SimpleGoBoard(object):
             """
         return self.board[point] == EMPTY
     
+    def undo_move(self):
+        point = self.move_history.pop()
+        opponent_color = GoBoardUtil.opponent(self.current_player)
+        assert self.get_color(point) == opponent_color
+        self.board[point] = EMPTY
+        self.current_player = opponent_color
+        
     def play_move_gomoku(self, point, color):
         """
             Play a move of color on point, for the game of gomoku
@@ -348,6 +356,7 @@ class SimpleGoBoard(object):
             return False
         self.board[point] = color
         self.current_player = GoBoardUtil.opponent(color)
+        self.move_history.append(point)
         return True
         
     def _point_direction_check_connect_gomoko(self, point, shift):
