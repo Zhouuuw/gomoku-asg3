@@ -429,6 +429,7 @@ class SimpleGoBoard(object):
 
         return False, None
 
+
     def simulate(self):
         """
         1. check if any player win first
@@ -495,3 +496,4 @@ class SimpleGoBoard(object):
 
 
             
+
