@@ -467,5 +467,48 @@ class SimpleGoBoard(object):
                 return winner
         return 0
 
+    def legal_move_around_stone_blocks(self):
+
+        legal_move = []
+        empty_point = self.get_empty_points()
+
+        if len(empty_point) < self.size:
+            legal_move = empty_point
+
+        elif len(empty_point) == self.size * self.size:
+            return empty_point
+
+        else:
+            black_points=where1d(self.board == BLACK).tolist()
+            white_points=where1d(self.board == WHITE).tolist()
+            not_empty_points = black_points + white_points
+
+            checking_set = set()
+
+            for point in not_empty_points:
+                checking_set.update(self._neighbors(point))
+                checking_set.update(self._diag_neighbors(point))
+            
+            for point in checking_set:
+                if self.get_color(point) == EMPTY:
+                    legal_move.append(point)
+
+        print("legal_move is "+str(legal_move))
+        value = []
+        d = {}
+        for key in legal_move:
+            v=self.evaluate_empty_point(key)
+            value.append(v)
+            d[key] = v
+        print("value is" +str(value))
+        sorted_value = sorted(d.items(),reverse = True,key = lambda kv:kv[1])
+
+        sorted_legal_move = []
+        for t in sorted_value:
+            sorted_legal_move.append(t[0])
+
+        return legal_move
+
+
             
 
