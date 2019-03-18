@@ -291,6 +291,8 @@ class GtpConnection():
         simulate_moves = self.board.get_empty_points()
         print(simulate_moves)
         simulate_moves_num = len(simulate_moves)
+        if simulate_moves_num == self.board.size*self.board.size:
+            return ("Random",simulate_moves)
         ##if rulebased, check rules
         if self.board.playout_policy == "rulebased":
             win = []

@@ -1,14 +1,9 @@
-###TESING
-clear_board
-boardsize 8
-play B D2
-play W A2
-play B D3
+clearboard
+play B B1
+play W B2
+play B C1
+play W B3
+play B D1
 play W A3
-play B D4
-
-
-
-120 policy_moves
 showboard
-#?[BlockOpenFour D1 D5]
+policy_moves
