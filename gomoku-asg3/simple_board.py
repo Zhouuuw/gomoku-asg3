@@ -78,6 +78,8 @@ class SimpleGoBoard(object):
         See GoBoardUtil.coord_to_point for explanations of the array encoding
         """
         self.playout_policy = "rulebased"
+        self.special_block_open_four = []
+        self.special_open_four = []
         self.move_history = []
         self.size = size
         self.NS = size + 1
@@ -97,11 +99,21 @@ class SimpleGoBoard(object):
             "3C12":3,
             "3C21":3,
             "3C22":3,
+            "3C20":3,
+            "3C02":3,
+            "3C12":3,
+            "3C22":3,
 
             "3O11":4,
             "3O12":4,
             "3O21":4,
             "3O22":4,
+            "3O00":4,
+            "3O01":4,
+            "3O10":4,
+            "3O02":4,
+            "3O20":4
+
         }
 
     def moveNumber(self):
@@ -540,6 +552,14 @@ class SimpleGoBoard(object):
         for shift in shifts:
             code = self.check_from_one_direction(point,shift)
             if code in self.transition:
+                if code == "3O11" or code == "3O21" or code == "3022":
+                    self.special_block_open_four.append(point + shift)
+                if code == "3C20" or code == "3C21" or code == "3C22":
+                    if self.get_color(point+shift) == 0:
+                        self.special_open_four.append(point+shift)
+                if code == "3O02" or code == "3C12" or code == "3C22":
+                    if self.get_color(point-shift) == 0:
+                        self.special_open_four.append(point-shift)
                 priority.append(self.transition[code])
         if len(priority) != 0:
             priority.sort()

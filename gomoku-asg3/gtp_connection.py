@@ -316,6 +316,10 @@ class GtpConnection():
             print(str(OpenFour))
             print(str(BlockOpenFourget))
             print("\n\n\n")
+            BlockOpenFourget += self.board.special_block_open_four
+            OpenFour += self.board.special_open_four
+            self.board.special_open_four = []
+            self.board.special_block_open_four = []
             if len(win) != 0:
                 return ("win",win)
             elif len(blockWin) != 0:
