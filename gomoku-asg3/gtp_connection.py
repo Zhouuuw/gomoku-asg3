@@ -276,9 +276,10 @@ class GtpConnection():
         return
 
     def genmove_simulate_random(self):
-        result,winner = self.board.check_game_end_gomoku
+        result,winner = self.board.check_game_end_gomoku()
         assert not result
-        simulate_moves = self.board.get_empty_point()
+        simulate_moves = self.board.get_empty_points()
+        print(simulate_moves)
         simulate_moves_num = len(simulate_moves)
         ##if rulebased, check rules
         if self.board.playout_policy == "rulebased":
@@ -286,7 +287,7 @@ class GtpConnection():
             blockWin = []
             OpenFour = []
             BlockOpenFourget = []
-            for i in range(len(simulate_moves_num)):
+            for i in range(simulate_moves_num):
                 move = simulate_moves[i]
                 prority = self.board.evaluate_empty_point(move)
                 if prority == 1:
@@ -319,14 +320,14 @@ class GtpConnection():
     def mc_simulate(self,move,numSim = 10):
         stats = [0] * 3
         board = self.board.copy()
-        board.play(move)
+        board.play_move_gomoku(move,self.board.current_player)
         moveNr = board.moveNumber()
         for _ in range(numSim):
             winner = board.simulate()
             stats[winner] += 1
             board.resetToMoveNumber(moveNr)
-        assert sum(stats) == self.numSim
-        eval = (stats[BLACK] + 0.5*stats[EMPTY]) / self.numSim
+        assert sum(stats) == numSim
+        eval = (stats[BLACK] + 0.5*stats[EMPTY]) / numSim
         if board.current_player == WHITE:
             eval = 1 - eval
         return eval

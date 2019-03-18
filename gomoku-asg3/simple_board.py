@@ -562,7 +562,7 @@ class SimpleGoBoard(object):
         random.shuffle(all_moves)
         b = self.copy()
         for i in range(len(all_moves)):
-            b.play_move_gomoku(all_moves[i])
+            b.play_move_gomoku(all_moves[i],b.current_player)
             result,winner = b.check_game_end_gomoku()
             if result == True:
                 return winner
