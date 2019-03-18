@@ -271,8 +271,11 @@ class GtpConnection():
         Prints the set of moves considered by the simulation policy 
         for the current player in the current position
         """
+        if len(self.board.get_empty_points()) == 0:
+            self.respond()
+            return 
         policy, move = self.genmove_simulate_random()
-        self.respond(policy+" "+format_point(move))
+        self.respond(policy+" "+format_point(point_to_coord(move,self.board.size)))
         return
 
     def genmove_simulate_random(self):
@@ -289,15 +292,23 @@ class GtpConnection():
             BlockOpenFourget = []
             for i in range(simulate_moves_num):
                 move = simulate_moves[i]
+                print("_______move is "+str(move))
                 prority = self.board.evaluate_empty_point(move)
+                print("________proprity is "+str(prority))
                 if prority == 1:
                     win.append(move)
                 elif prority == 2:
                     blockWin.append(move)
                 elif prority == 3:
-                    OpenFour
+                    OpenFour.append(move)
                 elif prority == 4:
-                    BlockOpenFourget
+                    BlockOpenFourget.append(move)
+            print("\n\n\n")
+            print(str(win))
+            print(str(blockWin))
+            print(str(OpenFour))
+            print(str(BlockOpenFourget))
+            print("\n\n\n")
             if len(win) != 0:
                 return ("win",win[0])
             elif len(blockWin) != 0:

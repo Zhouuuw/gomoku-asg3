@@ -1,3 +1,4 @@
+####PASS
 boardsize 7
 policy rule_based
 clear_board
@@ -50,6 +51,7 @@ play W G2
 10 policy_moves
 #?[OpenFour C1]
 
+###PASS
 clear_board
 play B B7
 play W C7
@@ -102,6 +104,8 @@ play W A1
 20 policy_moves
 #?[Random B1]
 
+
+###PASS
 policy random
 clear_board
 play B B7
@@ -159,6 +163,7 @@ play B B1
 40 policy_moves
 #?[]
 
+###TESTING
 50 genmove W
 #?[pass]
 
