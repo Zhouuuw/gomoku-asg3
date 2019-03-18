@@ -611,6 +611,6 @@ class SimpleGoBoard(object):
         return legal_move
 
     def set_playout_policy(self,policy):
-        self.set_playout_policy = policy
+        self.playout_policy = policy
             
 

@@ -12,6 +12,7 @@ from board_util import GoBoardUtil, BLACK, WHITE, EMPTY, BORDER, PASS, \
                        MAXSIZE, coord_to_point
 import numpy as np
 import re
+import random
 
 class GtpConnection():
 
@@ -274,8 +275,14 @@ class GtpConnection():
         if len(self.board.get_empty_points()) == 0:
             self.respond()
             return 
-        policy, move = self.genmove_simulate_random()
-        self.respond(policy+" "+format_point(point_to_coord(move,self.board.size)))
+        policy, moves = self.genmove_simulate_random()
+        moves.sort()
+        s = ""
+        for move in moves:
+            s += " "
+            s += format_point(point_to_coord(move,self.board.size))
+            
+        self.respond(policy+" "+s)
         return
 
     def genmove_simulate_random(self):
@@ -310,22 +317,28 @@ class GtpConnection():
             print(str(BlockOpenFourget))
             print("\n\n\n")
             if len(win) != 0:
-                return ("win",win[0])
+                return ("win",win)
             elif len(blockWin) != 0:
-                return ("BlockWin",blockWin[0])
+                return ("BlockWin",blockWin)
             elif len(OpenFour) != 0:
-                return ("OpenFour",OpenFour[0])
+                return ("OpenFour",OpenFour)
             elif len(BlockOpenFourget) != 0:
-                return ("BlockOpenFour",BlockOpenFourget[0])
+                return ("BlockOpenFour",BlockOpenFourget)
         # check random
         score = [0] * simulate_moves_num
         for i in range(simulate_moves_num):
             move = simulate_moves[i]
             score[i] = self.mc_simulate(move)
+        print("____score is "+str(score))
+        best = max(score)
+        best_move = []
+        for i in range(simulate_moves_num):
+            if score[i] == best:
+                best_move.append(simulate_moves[i])
 
-        best_move_index = score.index(max(score))
-        best_move = simulate_moves[best_move_index]
-        assert best_move in simulate_moves
+        #best_move_index = score.index(max(score))
+        #best_move = simulate_moves[best_move_index]
+        #assert best_move in simulate_moves
         return ("Random", best_move)
 
     def mc_simulate(self,move,numSim = 10):
@@ -347,6 +360,10 @@ class GtpConnection():
         """
         Generate a move for the color args[0] in {'b', 'w'}, for the game of gomoku.
         """
+        if len(self.board.get_empty_points()) == 0:
+            self.respond("pass")
+            return 
+
         board_color = args[0].lower()
         color = color_to_int(board_color)
         game_end, winner = self.board.check_game_end_gomoku()
@@ -356,7 +373,11 @@ class GtpConnection():
             else:
                 self.respond("resign")
             return
-        move = self.go_engine.get_move(self.board, color)
+        self.board.set_playout_policy("rulebased")
+        policy,moves = self.genmove_simulate_random()
+        random.shuffle(moves)
+        move = moves[0]
+        
         if move == PASS:
             self.respond("pass")
             return

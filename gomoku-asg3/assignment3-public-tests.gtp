@@ -163,10 +163,11 @@ play B B1
 40 policy_moves
 #?[]
 
-###TESTING
+###PASS
 50 genmove W
 #?[pass]
 
+###PASS
 60 genmove B
 #?[pass]
 
@@ -180,22 +181,30 @@ play B B3
 play W C4
 play B B4
 
+###PASS
 70 policy_moves
 #?[BlockWin B5]
 
+###PASS
 80 genmove W
 #?[b5|B5]
 
+###PASS
 play B A1
 90 policy_moves
 #?[OpenFour C5]
+
+###PASS
 play W C5
 play B A2
 100 policy_moves
 #?[Win C1 C6]
+
+#PASS
 110 genmove W
 #?[C1|C6]
 
+###TESING
 clear_board
 boardsize 8
 play B D2
