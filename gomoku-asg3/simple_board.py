@@ -104,6 +104,21 @@ class SimpleGoBoard(object):
             "3O22":4,
         }
 
+    def moveNumber(self):
+        return len(self.move_history)
+
+    '''
+    used in simulation 
+    undo the number of move that done in simulation
+    '''
+    def resetToMoveNumber(self, moveNr):
+        numUndos = self.moveNumber() - moveNr
+        assert numUndos >= 0
+        for _ in range(numUndos):
+            self.undo_move()
+        assert self.moveNumber() == moveNr
+
+
     def copy(self):
         b = SimpleGoBoard(self.size)
         assert b.NS == self.NS
