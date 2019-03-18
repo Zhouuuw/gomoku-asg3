@@ -77,7 +77,7 @@ class SimpleGoBoard(object):
         The board is stored as a one-dimensional array
         See GoBoardUtil.coord_to_point for explanations of the array encoding
         """
-        self.playout_policy
+        self.playout_policy = "rulebased"
         self.move_history = []
         self.size = size
         self.NS = size + 1
@@ -102,16 +102,6 @@ class SimpleGoBoard(object):
             "3O12":4,
             "3O21":4,
             "3O22":4,
-
-            "3C02":3,
-            "3C01":3,
-            "3C20":3,
-            "3C10":3,
-
-            "3O02":4,
-            "3O01":4,
-            "3O20":4,
-            "3O10":4,
         }
 
     def copy(self):
@@ -515,20 +505,32 @@ class SimpleGoBoard(object):
                     return(str(negative_BW)+self.get_O_or_C(c2)+str(positive_empty)+str(negative_empty))
 
     def get_O_or_C(self,c):
+        """
+        return string code c for current player, o for opponent player
+        """
         if c == self.current_player:
             return "C"
         else:
             return "O"
 
     def evaluate_empty_point(self,point):
+        """
+        win get a priority 1
+        BlockWin get a priority 2
+        OpenFour get a priority 3
+        BlockOpenFourget a priority 4
+        """
         shifts = [1,self.NS,-self.NS,self.NS+1,self.NS-1]
-        mark = 0
+        priority = []
         for shift in shifts:
             code = self.check_from_one_direction(point,shift)
             if code in self.transition:
-                mark += self.transition[code]
+                priority.append(self.transition[code])
+        if len(priority) != 0:
+            priority.sort()
+            return priority[0]
+        return 5
 
-        return mark
     def simulate(self):
         """
         1. check if any player win first

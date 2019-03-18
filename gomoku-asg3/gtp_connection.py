@@ -271,8 +271,68 @@ class GtpConnection():
         Prints the set of moves considered by the simulation policy 
         for the current player in the current position
         """
+        if self.board.playout_policy == "rulebased":
+            pass
+        else:
+            self.genmove_simulate_random()
         self.respond()
-        pass
+        return
+
+    def genmove_simulate_random(self):
+        result,winner = self.board.check_game_end_gomoku
+        assert not result
+        simulate_moves = self.board.get_empty_point()
+        simulate_moves_num = len(simulate_moves)
+        ##if rulebased, check rules
+        if self.board.playout_policy == "rulebased":
+            win = []
+            blockWin = []
+            OpenFour = []
+            BlockOpenFourget = []
+            for i in range(len(simulate_moves_num)):
+                move = simulate_moves[i]
+                prority = self.board.evaluate_empty_point(move)
+                if prority == 1:
+                    win.append(move)
+                elif prority == 2:
+                    blockWin.append(move)
+                elif prority == 3:
+                    OpenFour
+                elif prority == 4:
+                    BlockOpenFourget
+            if len(win) != 0:
+                return ("win",win[0])
+            elif len(blockWin) != 0:
+                return ("blockWin",blockWin[0])
+            elif len(OpenFour) != 0:
+                return ("openFour",OpenFour[0])
+            elif len(BlockOpenFourget) != 0:
+                return ("BlockOpenFourget",BlockOpenFourget[0])
+        # check random
+        score = [0] * simulate_moves_num
+        for i in range(simulate_moves_num):
+            move = simulate_moves[i]
+            score[i] = self.mc_simulate(move)
+
+        best_move_index = score.index(max(score))
+        best_move = simulate_moves[best_move_index]
+        assert best_move in simulate_moves
+        return ("random", best_move)
+
+    def mc_simulate(self,move,numSim = 10):
+        stats = [0] * 3
+        board = self.board.copy()
+        board.play(move)
+        moveNr = board.moveNumber()
+        for _ in range(numSim):
+            winner = board.simulate()
+            stats[winner] += 1
+            board.resetToMoveNumber(moveNr)
+        assert sum(stats) == self.numSim
+        eval = (stats[BLACK] + 0.5*stats[EMPTY]) / self.numSim
+        if board.current_player == WHITE:
+            eval = 1 - eval
+        return eval
 
     def genmove_cmd(self, args):
         """
