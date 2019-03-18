@@ -271,11 +271,8 @@ class GtpConnection():
         Prints the set of moves considered by the simulation policy 
         for the current player in the current position
         """
-        if self.board.playout_policy == "rulebased":
-            pass
-        else:
-            self.genmove_simulate_random()
-        self.respond()
+        policy, move = self.genmove_simulate_random()
+        self.respond(policy+" "+format_point(move))
         return
 
     def genmove_simulate_random(self):
@@ -303,11 +300,11 @@ class GtpConnection():
             if len(win) != 0:
                 return ("win",win[0])
             elif len(blockWin) != 0:
-                return ("blockWin",blockWin[0])
+                return ("BlockWin",blockWin[0])
             elif len(OpenFour) != 0:
-                return ("openFour",OpenFour[0])
+                return ("OpenFour",OpenFour[0])
             elif len(BlockOpenFourget) != 0:
-                return ("BlockOpenFourget",BlockOpenFourget[0])
+                return ("BlockOpenFour",BlockOpenFourget[0])
         # check random
         score = [0] * simulate_moves_num
         for i in range(simulate_moves_num):
@@ -317,7 +314,7 @@ class GtpConnection():
         best_move_index = score.index(max(score))
         best_move = simulate_moves[best_move_index]
         assert best_move in simulate_moves
-        return ("random", best_move)
+        return ("Random", best_move)
 
     def mc_simulate(self,move,numSim = 10):
         stats = [0] * 3

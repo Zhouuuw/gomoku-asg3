@@ -29,7 +29,7 @@ class SimulationPlayer(object):
         stats = [0] * 3
         board.play(move)
         moveNr = board.moveNumber()
-        for _ in range(numSim):
+        for _ in range(self.numSim):
             winner = board.simulate()
             stats[winner] += 1
             board.resetToMoveNumber(moveNr)
