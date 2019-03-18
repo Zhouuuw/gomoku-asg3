@@ -43,6 +43,8 @@ class GtpConnection():
             "list_commands": self.list_commands_cmd,
             "play": self.play_cmd,
             "legal_moves": self.legal_moves_cmd,
+            "policy":self.policy_cmd,
+            "policy_moves":self.policy_moves_command,
             "gogui-rules_game_id": self.gogui_rules_game_id_cmd,
             "gogui-rules_board_size": self.gogui_rules_board_size_cmd,
             "gogui-rules_legal_moves": self.gogui_rules_legal_moves_cmd,
@@ -244,6 +246,33 @@ class GtpConnection():
             self.respond()
         except Exception as e:
             self.respond('{}'.format(str(e)))
+
+    def policy_cmd(self,args):
+        """
+        Get a playout policy either "random" or "rulebased"
+        set it to simple board attribute playout_policy
+        """
+        try:
+            policy = args[0].lower()
+            if policy != "random" and policy != "rulebased":
+                self.respond("unknown command!")
+            elif policy == "random":
+                self.board.set_playout_policy(policy)
+                self.respond("Playout policy is set to random.")
+            elif policy == "rulebased":
+                self.board.set_playout_policy(policy)
+                self.respond("Playout polict is set to rulebased.")
+        except Exception:
+            self.respond("missing argument!")
+        
+        return
+    def policy_moves_command(self,args):
+        """
+        Prints the set of moves considered by the simulation policy 
+        for the current player in the current position
+        """
+        self.respond()
+        pass
 
     def genmove_cmd(self, args):
         """

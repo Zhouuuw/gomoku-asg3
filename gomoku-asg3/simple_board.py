@@ -77,6 +77,7 @@ class SimpleGoBoard(object):
         The board is stored as a one-dimensional array
         See GoBoardUtil.coord_to_point for explanations of the array encoding
         """
+        self.playout_policy
         self.move_history = []
         self.size = size
         self.NS = size + 1
@@ -88,6 +89,30 @@ class SimpleGoBoard(object):
         self.liberty_of = np.full(self.maxpoint, NULLPOINT, dtype = np.int32)
         self._initialize_empty_points(self.board)
         self._initialize_neighbors()
+        self.transition = {
+            "4C":1,
+            "4O":2,
+
+            "3C11":3,
+            "3C12":3,
+            "3C21":3,
+            "3C22":3,
+
+            "3O11":4,
+            "3O12":4,
+            "3O21":4,
+            "3O22":4,
+
+            "3C02":3,
+            "3C01":3,
+            "3C20":3,
+            "3C10":3,
+
+            "3O02":4,
+            "3O01":4,
+            "3O20":4,
+            "3O10":4,
+        }
 
     def copy(self):
         b = SimpleGoBoard(self.size)
@@ -429,7 +454,81 @@ class SimpleGoBoard(object):
 
         return False, None
 
+    def check_from_one_direction(self,point,d):
+        """
+        For any given empty point on given shifting position,
+        check the number of blacks or whites on positive and negative diretion
+        and the number of empty after blacks or white.
+        Get the maxmum number of whites or blacks and record the color
 
+        """
+        p = point + d
+        positive_BW= 0
+        positive_empty = 0
+        c1 = self.get_color(p)
+        if c1 == BLACK or c1 == WHITE:
+            while self.get_color(p) == c1:
+                positive_BW+=1
+                p += d
+            if positive_BW == 4:
+                return("4"+self.get_O_or_C(c1))
+            while self.get_color(p) == EMPTY and positive_empty< 2:
+                positive_empty+= 1
+                p += d
+        elif c1 == EMPTY:
+            while positive_empty< 2 and self.get_color(p) == EMPTY:
+                positive_empty+= 1
+                p += d
+
+        p = point - d
+        negative_BW= 0
+        negative_empty= 0
+        c2 = self.get_color(p)
+        if c2 == BLACK or c2 == WHITE:
+            while self.get_color(p) == c2:
+                negative_BW +=1
+                p -= d
+            if negative_BW == 4:
+                return("4"+self.get_O_or_C(c2))
+            while self.get_color(p) == EMPTY and negative_empty < 2:
+                negative_empty += 1
+                p -= d
+        elif c2 == EMPTY:
+            while negative_empty < 2 and self.get_color(p) == EMPTY:
+                negative_empty += 1
+                p -= d
+
+        
+        if c1==EMPTY and c2!=EMPTY:
+            return(str(negative_BW)+self.get_O_or_C(c2)+str(positive_empty)+str(negative_empty))
+        elif c1!=EMPTY and c2==EMPTY:
+            return(str(positive_BW)+self.get_O_or_C(c1)+str(positive_empty)+str(negative_empty))
+        elif c1 == EMPTY and c2 == EMPTY:
+            return(str(0)+str(EMPTY)+str(positive_empty)+str(negative_empty))
+        else:
+            if c1 == c2:
+                return(str(positive_BW + negative_BW)+self.get_O_or_C(c1)+str(positive_empty)+str(negative_empty))
+            else:
+                if positive_BW >= negative_BW:
+                    return(str(positive_BW)+self.get_O_or_C(c1)+str(positive_empty)+str(negative_empty))
+                else:
+                    return(str(negative_BW)+self.get_O_or_C(c2)+str(positive_empty)+str(negative_empty))
+
+    def get_O_or_C(self,c):
+        if c == self.current_player:
+            return "C"
+        else:
+            return "O"
+
+    def evaluate_empty_point(self,point):
+        shifts = [1,self.NS,-self.NS,self.NS+1,self.NS-1]
+        mark = 0
+        for shift in shifts:
+            code = self.check_from_one_direction(point,shift)
+            if code in self.transition:
+                mark += self.transition[code]
+
+        return mark
     def simulate(self):
         """
         1. check if any player win first
@@ -494,6 +593,7 @@ class SimpleGoBoard(object):
 
         return legal_move
 
-
+    def set_playout_policy(self,policy):
+        self.set_playout_policy = policy
             
 
