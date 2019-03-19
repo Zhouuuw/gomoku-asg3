@@ -1,0 +1,9 @@
+Script started on Mon 18 Mar 2019 06:42:07 PM MDT
+]0;carson@carson-TM1701: /media/carson/60E810DFE810B56E/New/#STUDY/#12 2019 Winter/Cmput 496/assignment3/test/gomoku-asg3/gomoku-asg3[01;32mcarson@carson-TM1701[00m:[01;34m/media/carson/60E810DFE810B56E/New/#STUDY/#12 2019 Winter/Cmput 496/asssignment3/test/gomoku-asg3/gomoku-asg3[00m$ gogui-regress Gomoku.py assignment3-public-tests.
+gtp[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[15Ppython3 Gomoku.py < small_test.txt
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgogui-regress Gomoku.py assignment3-public-tests.
+gtp
+]0;carson@carson-TM1701: /media/carson/60E810DFE810B56E/New/#STUDY/#12 2019 Winter/Cmput 496/assignment3/test/gomoku-asg3/gomoku-asg3[01;32mcarson@carson-TM1701[00m:[01;34m/media/carson/60E810DFE810B56E/New/#STUDY/#12 2019 Winter/Cmput 496/asssignment3/test/gomoku-asg3/gomoku-asg3[00m$ exit
+exit
+
+Script done on Mon 18 Mar 2019 06:42:30 PM MDT

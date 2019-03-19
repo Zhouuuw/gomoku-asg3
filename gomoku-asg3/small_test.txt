@@ -1,9 +1,0 @@
-clearboard
-play B B1
-play W B2
-play B C1
-play W B3
-play B D1
-play W A3
-showboard
-policy_moves

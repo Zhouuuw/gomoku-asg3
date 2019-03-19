@@ -276,13 +276,17 @@ class GtpConnection():
             self.respond()
             return 
         policy, moves = self.genmove_simulate_random()
-        moves.sort()
-        s = ""
+        smoves = []
         for move in moves:
+            smoves.append(format_point(point_to_coord(move,self.board.size)))
+        smoves.sort()
+
+        s = ""
+        for move in smoves:
             s += " "
-            s += format_point(point_to_coord(move,self.board.size))
+            s += move
             
-        self.respond(policy+" "+s)
+        self.respond(policy+s)
         return
 
     def genmove_simulate_random(self):
@@ -321,7 +325,7 @@ class GtpConnection():
             BlockOpenFourget += self.board.special_block_open_four
             self.board.special_open_four = []
             if len(win) != 0:
-                return ("win",win)
+                return ("Win",win)
             elif len(blockWin) != 0:
                 return ("BlockWin",blockWin)
             elif len(OpenFour) != 0:
