@@ -552,7 +552,7 @@ class SimpleGoBoard(object):
         for shift in shifts:
             code = self.check_from_one_direction(point,shift)
             if code in self.transition:
-                if code == "3O11" or code == "3O21" or code == "3022":
+                if code == "3O21" or code == "3022":
                     self.special_block_open_four.append(point + shift)
                 if code == "3C20" or code == "3C21" or code == "3C22":
                     if self.get_color(point+shift) == 0:
